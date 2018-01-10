@@ -4,6 +4,7 @@
 
 #### 1. 环境需求
 #####    一 浏览器配置
+    为了避免你到处寻找软件和插件，已将需要下载的软件放入soft目录
     (1) 50以下的低版本firefox浏览器请更新到高版本,
         更新步骤参考博客(firefox无需下载了，本工程soft目录下含有最新版本浏览器软件)：http://blog.csdn.net/aoshilang2249/article/details/48630129
     (2) 安装geckodriver驱动，将soft目录下的geckodriver解压放入本机/usr/local/bin/；
