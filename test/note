@@ -1,0 +1,22 @@
+#seatType_1 > option:nth-child(1)
+
+#seatType_1
+
+#body_id > div.content > div.layout.person > div.lay-bd > table
+
+#tr_id_1 > seatType_1
+
+#ticket_6c0000G29600
+
+#\36 i00000G720F_IZQ_BXP
+
+#\36 500000Z9804_GGQ_BXP
+
+//*[@id="6500000Z9804_GGQ_BXP"]
+
+//*[@id="queryLeftTable"]
+//*[@id="ticket_6c000G140801"]
+
+//*tbody/tr[contains(@id,'ticket_')]
+
+//*[@id="train_num_0"]
