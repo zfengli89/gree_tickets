@@ -6,7 +6,7 @@ driver_name = "firefox"
 executable_path = "/usr/local/bin/geckodriver"
 
 # 12306
-user = "249153500@qq.com"
+user = "*******@qq.com"
 password = "******"
 
 # 票信息
@@ -16,9 +16,9 @@ from_station = u"%u5E7F%u5DDE%u5357%2CIZQ" #广州南
 to_station = u"%u5CB3%u9633%u4E1C%2CYIQ"   #岳阳东
 departure_time = u"2018-01-16"
 # 可接受的车次 顺序先后代表了优先级别
-order = ["G1744345"]
+order = ["G1744345","G123"]
 # 乘客
-passengers = [u"李志丰", u"练晓"]
+passengers = [u"丰", u"小陈陈"]
 
 # 可以接受的座位等级,先后顺序代表优先级别
 #  商务座:'9' 一等座: 'M' 二等座: 'O'
