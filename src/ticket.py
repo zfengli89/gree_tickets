@@ -159,12 +159,12 @@ class ticket():
     def run(self):
         self.login()
         conf.logger.info("登陆成功")
-        self.driver.visit(self.ticket_url)
-        # set cookies
-        conf.logger.info("输入查票信息")
-        self.add_cookies()
         # 开始抢票
         while (1):
+            self.driver.visit(self.ticket_url)
+            # set cookies
+            conf.logger.info("输入查票信息")
+            self.add_cookies()
             # 预订
             self.book_ticket()
             # 选择乘车人
