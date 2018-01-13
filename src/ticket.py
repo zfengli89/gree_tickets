@@ -107,7 +107,7 @@ class ticket():
             for seat_type in self.xb:
                 seatId = "#seatType_" + str(cnt)
                 self.driver.find_by_css(seatId).click()
-                seat_butten = self.driver.find_by_value(seat_type)
+                seat_butten = self.driver.find_by_css(seatId).find_by_value(seat_type)
                 if seat_butten is None:
                     conf.logger.info("座位类型%s售空",seat_type)
                     continue
@@ -121,6 +121,7 @@ class ticket():
     # 增加cookies
     def add_cookies(self):
         # load cookies infomations
+        self.driver.visit(self.ticket_url)
         self.driver.cookies.add({"_jc_save_fromStation": self.starts})
         self.driver.cookies.add({"_jc_save_toStation": self.ends})
         self.driver.cookies.add({"_jc_save_fromDate": self.dtime})
@@ -134,6 +135,14 @@ class ticket():
             conf.logger.info("查票")
             try:
                 self.driver.find_by_text(u"查询").click()
+                warn_butten = self.driver.find_by_id("qd_closeDefaultWarningWindowDialog_id")
+                if len(warn_butten) > 0:
+                    conf.logger.warn("日期不在预售期范围内")
+                    warn_butten.click()
+                    sleep(10)
+                    continue
+                else:
+                    conf.logger.info("日期在预售期范围内,可以查票")
                 book_Elementlist = self.driver.find_by_text(u"预订")
                 if len(book_Elementlist) > 0:
                     trains_indexs = []
@@ -161,19 +170,21 @@ class ticket():
         conf.logger.info("登陆成功")
         # 开始抢票
         while (1):
-            self.driver.visit(self.ticket_url)
-            # set cookies
-            conf.logger.info("输入查票信息")
-            self.add_cookies()
-            # 预订
-            self.book_ticket()
-            # 选择乘车人
-            self.choice_passengers()
-            # 选座位等级
-            if(self.choice_seat()):
-                break
-            else:
-                conf.logger.info("需要的座位类型已售空,重新查询余票")
+            try:
+                # set cookies
+                conf.logger.info("输入查票信息")
+                self.add_cookies()
+                # 预订
+                self.book_ticket()
+                # 选择乘车人
+                self.choice_passengers()
+                # 选座位等级
+                if(self.choice_seat()):
+                    break
+                else:
+                    conf.logger.info("需要的座位类型已售空,重新查询余票")
+            except Exception:
+                conf.logger.info("程序有bug，请调试检查!")
         sleep(1)
         # 订单提交
         self.driver.find_by_id('submitOrder_id').click()
@@ -182,6 +193,3 @@ class ticket():
         self.driver.find_by_id('qr_submit_id').click()
         # 抢票成功
         conf.logger.info("抢票成功,请在30分钟内去付款...")
-
-
-
