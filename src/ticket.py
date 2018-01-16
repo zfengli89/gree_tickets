@@ -28,6 +28,7 @@ class ticket():
     buy_url = None
     # driver
     driver = None
+    time_interval = None
 
     def __init__(self,
                  driver_name,
@@ -44,7 +45,8 @@ class ticket():
                  ticket_url,
                  login_url,
                  initmy_url,
-                 buy_url):
+                 buy_url,
+                 time_interval):
         self.driver_name = driver_name
         self.executable_path = executable_path
         self.username = username
@@ -60,6 +62,7 @@ class ticket():
         self.login_url = login_url
         self.initmy_url = initmy_url
         self.buy_url = buy_url
+        self.time_interval = time_interval
         self.setDriver()
 
     # set driver
@@ -161,35 +164,38 @@ class ticket():
             except Exception:
                 conf.logger.warn("查询失败,网络不稳定.")
             finally:
-                sleep(3)
+                sleep(self.time_interval)
                 cnt = cnt + 1
                 conf.logger.info("没有可预订的票, 第%d次查询余票.", cnt)
 
     def run(self):
         self.login()
         conf.logger.info("登陆成功")
-        # 开始抢票
-        while (1):
+        while(1):
             try:
-                # set cookies
-                conf.logger.info("输入查票信息")
-                self.add_cookies()
-                # 预订
-                self.book_ticket()
-                # 选择乘车人
-                self.choice_passengers()
-                # 选座位等级
-                if(self.choice_seat()):
-                    break
-                else:
-                    conf.logger.info("需要的座位类型已售空,重新查询余票")
+                # 开始抢票
+                while (1):
+                    try:
+                        # set cookies
+                        conf.logger.info("输入查票信息")
+                        self.add_cookies()
+                        # 预订
+                        self.book_ticket()
+                        # 选择乘车人
+                        self.choice_passengers()
+                        # 选座位等级
+                        if(self.choice_seat()):
+                            break
+                        else:
+                            conf.logger.info("需要的座位类型已售空,重新查询余票")
+                    except Exception:
+                        conf.logger.info("程序有bug，请调试检查!")
+                # 订单提交
+                self.driver.find_by_id('submitOrder_id').click()
+                # 确认选座
+                self.driver.find_by_id('qr_submit_id').click()
+                # 抢票成功
+                conf.logger.info("抢票成功,请在30分钟内去付款...")
+                break
             except Exception:
-                conf.logger.info("程序有bug，请调试检查!")
-        sleep(1)
-        # 订单提交
-        self.driver.find_by_id('submitOrder_id').click()
-        # 确认选座
-        sleep(1)
-        self.driver.find_by_id('qr_submit_id').click()
-        # 抢票成功
-        conf.logger.info("抢票成功,请在30分钟内去付款...")
+                conf.logger.info("出票失败,重刷.")
